@@ -1,0 +1,43 @@
+vim myapp-deployment.yml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: myapp-deployment
+ labels:
+  author: intelliqit
+  type: appserver
+spec:
+ replicas: 2
+ selector:
+  matchLabels:
+   type: appserver
+ template:
+  metadata:
+   name: myapp-pod
+   labels:
+    type: appserver
+  spec:
+   containers:
+    - name: myapp
+      image: intelliqit/myapp
+...
+
+
+vim myapp-service.yml
+---
+apiVersion: apps/v1
+kind: Service
+metadata:
+ name: myapp-service
+ labels:
+  author: intelliqit
+spec:
+ type: NodePort
+ ports:
+  - targetPort: 8080
+    port: 8080
+    nodePort: 30008
+ selector:
+  type: appserver
+...
