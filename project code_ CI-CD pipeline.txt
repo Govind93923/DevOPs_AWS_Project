@@ -1,0 +1,62 @@
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('Download')
+        {
+            steps
+            {
+                git 'https://github.com/rajeshbabujalagam/gitpractiseaug17'
+            }
+        }
+        stage('Build')
+        {
+            steps
+            {
+                sh 'mvn package'
+            }
+        }
+        stage('Create_Docker_Image')
+        {
+            steps
+            {
+              sh 'cp /home/ubuntu/.jenkins/workspace/e2eproj/webapp/target/webapp.war ~ '
+              sh 'echo "COPY webapp.war /usr/local/tomee/webapps/testappfrtrs.war" >> /home/ubuntu/dockerfile'
+              sh '''sudo docker build --no-cache -t intelliqit/myapp -f /home/ubuntu/dockerfile /home/ubuntu'''
+                  
+            }
+        }
+        stage('Push_Docker_image')
+        {
+            steps
+            {
+               sh 'sudo docker push  path '
+                
+            }
+        }
+        stage('Execute Ansible playbook to deploy docker app in the QAserrvers')
+        {
+            steps
+            {
+                sh 'ssh ubuntu@172.31.20.134 ansible-playbook playbook2.yml -b'
+            }
+        }
+        stage('Downlaod and execute the selenium scripts')
+        {
+            steps
+            {
+                git 'https://github.com/intelliqittrainings/FunctionalTesting.git'
+                sh 'java -jar testing.jar'
+            }
+        }
+        stage('Execute Kubernetes definition files to deploy into proservers')
+        {
+            steps
+            {
+                sh '''ssh ubuntu@44.198.166.244 kubectl apply -f myapp-deployment.yml
+                         ssh ubuntu@44.198.166.244 kubectl apply -f myapp-service.yml'''
+            }
+        }
+    }
+}
