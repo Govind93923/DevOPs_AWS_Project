@@ -1,3 +1,9 @@
+
+
+![istockphoto-1438577807-612x612](https://github.com/user-attachments/assets/20bf4c1d-4cd7-4b8d-9ce1-cc478e140b47)
+
+
+
 End-to-End DevOps Pipeline Project
 This repository contains an end-to-end DevOps pipeline designed to automate code integration, deployment, and infrastructure provisioning. It leverages industry-standard tools like Jenkins, Docker, Kubernetes, Terraform, and Git to achieve seamless, reliable, and repeatable deployments.
 
